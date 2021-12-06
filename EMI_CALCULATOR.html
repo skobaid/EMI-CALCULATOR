@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html>
+  
+  <header>
+    <script src="https://cdn.anychart.com/releases/8.0.1/js/anychart-core.min.js"></script>
+      <script src="https://cdn.anychart.com/releases/8.0.1/js/anychart-pie.min.js"></script>
+ 
+    <meta charset="utf-8">
+    <meta name="viewport" initial-scale=1.0">
+    <style> 
+    body{
+      background-color: skyblue;
+      margin: 0px;
+    }
+        #main{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        }
+
+        #emi-calculation{
+        width: 500px;
+        height: 350px;
+        background-color:whitesmoke;
+       padding-top: 30px;
+        }
+
+        #title{
+        margin-top: 0px;
+        font-size: 30px;
+        font-family: verdana;
+        color: black;
+        text-align: center;
+        text-decoration: inherit;
+        }
+
+        #emi-output{
+        width: 500px;
+        height: 300px;
+       /* border: 2px solid black;
+        box-shadow: 2px 5px 5px gray;
+        border-radius: 5px;*/
+        padding-top: 10px;
+        background-color: whitesmoke;
+        
+        }
+
+        .section{
+        margin-left: 10px;
+        font-size: 20px;
+        padding: 10px;
+        font-family: verdana;
+        }
+
+        .result{
+        margin-top: 20px;
+        margin-left: 10px;
+        font-size: 20px;
+        padding: 5px;
+        font-family: verdana;
+        }
+
+        .input{
+        float: right;
+        height: 20px;
+        margin-right: 10px;
+        }
+
+        #calc,#reset{
+        width: 200px;
+        height: 30px;
+        font-size: 20px;
+        background-color: black;
+        color: whitesmoke;
+        box-shadow: 2px 5px 5px gray; 
+        }
+
+        .submit{
+        text-align: center;
+        margin-top: 20px;
+        }
+
+        #reset{
+        background-color: black;
+        color: whitesmoke;
+        }
+
+        @media screen and (max-width: 500px){
+        #border{
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            margin-left: 5px;
+            margin-right: 5px;
+        }
+
+        .label,.result{
+            font-size: 10px;
+        }
+
+        #title{
+            font-size: 20px;
+        }
+
+        #emi-calculation{
+            max-width: 100%;
+        }
+
+        #emi-output{
+            width: 100%;
+            margin-left: 5px;
+            margin-right: 5px;
+        }
+
+        .section{
+            font-size: 16px;
+        }
+
+        .input{
+            width: 100px;
+        }
+
+        #calc, #reset{
+            width: 100px;
+        }
+        
+        #container
+        {
+          float: left;
+          
+        }
+        .pie
+        {
+          background-color: black;
+        }
+    }
+
+    .btn {
+  border: none;
+  outline: none;
+  padding: 10px 16px;
+  background-color: #f1f1f1;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+/* Style the active class, and buttons on mouse-over */
+.active, .btn:hover {
+  background-color: #666;
+  color: white;
+}
+
+</style>
+  </header>
+      <body>
+        
+      <div id="main">   <!--main-->
+        
+        <div id="emi-calculation">    <!--calculation part-->
+          
+          <p id="title"><strong>EMI CALCULATOR<strong><br>
+          <div id="mydiv">
+            <button type="submit" id="homeid" onclick="home_loan()" class="btn active">HOME LOAN</button>
+            <button type="submit" id="carid" onclick="car_loan()" class="btn">CAR LOAN</button>
+            <button type="submit" id="personalid" onclick="personal_loan()" class="btn">PERSONAL LOAN</button>
+          </div>
+          </p> 
+            
+            <div class="section">         <!--loan amount with input-->
+              <label id="loanamount" class="label">Loan Amount:(Rs)</label>
+              <input type="number" class="input" id="value1" placeholder="Enter Loan amount.." value = ""></input>
+              
+            </div>  
+
+            <div class="section">   <!--interest rate with input-->
+               <label id="interestrate" class="label">Interest Rate:(%)</label>
+              <input type="number" class="input" id="value2" placeholder="Enter IR per year.." value=""></input>
+            </div>             
+
+            <div class="section"> <!--loan Duration-->
+               <label id="loanduration" class="label">Loan Duration(Months):</label>
+              <input type="number" class="input" id="value3" placeholder="Enter loan duration.." value=""></input>
+            </div>  
+            
+            <div class="section" id= "sec2">
+
+            </div>
+
+            
+        
+            
+       
+     
+      <div class="submit">           <!--button-->
+     <button type="submit" id="calc" onclick="calculation()">Calculate</button>
+     
+      </div>                          
+      
+        </div>    <!--Calculation part closing-->
+        
+        <div id="emi-output">
+         <div class="result">EMI Amount : <span id="emi-amount"></span>
+         </div>
+         <div class="result">Total Intrest Payable : <span id="intrest-payable"></span>
+         </div>
+         <div class="result">Total Payment : <span id="total-payment"></span>
+         </div>
+          
+          
+        <div class="submit">           <!--button-->
+     <button type="submit" id="reset" onclick="reset()">Reset</button>
+      </div>                         
+          
+        </div>
+        <div id="container" style="width:500px; height: 300px;"></div>
+   
+      </div> 
+      
+      
+      <script>
+
+      function reset()
+      {
+        document.getElementById("value1").value = 0;
+        document.getElementById("value2").value = 0;
+        document.getElementById("value3").value = 0;
+        
+        
+        document.getElementById("emi-amount").innerHTML = " Rs " + 0;
+        document.getElementById("intrest-payable").innerHTML = " Rs " + 0;
+        document.getElementById("total-payment").innerHTML = " Rs " + 0;
+       
+        
+        
+      }
+      
+      function calculation()
+      {
+        //..............Declaration........................
+
+        var loanAmount = document.getElementById("value1").value;
+        var interestRate = document.getElementById("value2").value;
+        var loanDuration = document.getElementById("value3").value;
+       
+        
+        //.......... Calculations.............
+    
+      var monthlyRate = interestRate/(12*100);
+      
+      var onePlusR = Math.pow(1+monthlyRate,loanDuration);
+
+      var denominator = onePlusR-1;
+
+      var emi = (loanAmount*monthlyRate*(onePlusR/denominator)).toFixed(2);
+      var totalAmt = loanDuration*parseFloat(emi).toFixed(2);
+     // var totalAmt = totalAmt1 +fees_charges;
+      var totalInt = Math.floor(totalAmt-loanAmount);
+
+      console.log(emi);
+      console.log(totalAmt);
+      console.log(totalInt);
+       
+        
+        //--------------OUTPUT ------------------------
+
+        
+        document.getElementById("emi-amount").innerHTML = " Rs " + emi;
+        document.getElementById("intrest-payable").innerHTML = " Rs " + totalInt;
+        document.getElementById("total-payment").innerHTML = " Rs " + totalAmt;
+
+      //...........................Pie Chart ............
+
+      document.getElementById('container').innerHTML = '';
+        var data = [
+                     {x: "Total Intrest Payable", value: totalInt},
+      
+                    {x: "Laon Amount", value: totalAmt}
+                    ];
+
+
+        // create the chart
+        var chart = anychart.pie();
+
+        // set the chart title
+        chart.title("EMI");
+
+        // add the data
+        chart.data(data);
+
+        // display the chart in the container
+        chart.container('container');
+        chart.draw();      
+      }
+
+        function personal_loan()
+        {
+          console.log('Personal :Lone')
+          document.getElementById("value1").value = 100000;
+          document.getElementById("value2").value = 10;
+          document.getElementById("value3").value = 12;
+          document.getElementById("loanamount").innerHTML = "Personal Loan:(Rs)";
+          document.getElementsByClassName('container').innerHTML = "";
+          calculation();
+        }
+
+        function home_loan()
+        {
+        //  var home_color = document.getElementById("homeid");
+        //   home_color.style.background = "red";
+        //   var car_color = document.getElementById("carid");
+        //   car_color.style.background = "none";
+        //   var paersonal_color = document.getElementById("personalid");
+        //   personal_color.style.background = "none";
+
+          console.log('home :Lone')
+          document.getElementById("value1").value = 5000000;
+          document.getElementById("value2").value = 7.5;
+          document.getElementById("value3").value = 240;
+          document.getElementById("loanamount").innerHTML = "Home Loan:(Rs)";
+          calculation();
+        }
+
+        function car_loan()
+        {
+          console.log('Car :Lone')
+          document.getElementById("value1").value = 400000;
+          document.getElementById("value2").value = 5;
+          document.getElementById("value3").value = 10;
+          document.getElementById("loanamount").innerHTML = "Car Loan:(Rs)";
+          calculation();
+        }
+
+        //..........OnReady functon.............................//
+        document.addEventListener("DOMContentLoaded", function(event)
+        {
+          home_loan();
+        })
+
+
+
+        // Add active class to the current button (highlight it)
+        var header = document.getElementById("mydiv");
+        var btns = header.getElementsByClassName("btn");
+        for (var i = 0; i < btns.length; i++) {
+          btns[i].addEventListener("click", function() {
+          var current = document.getElementsByClassName("active");
+          current[0].className = current[0].className.replace(" active", "");
+          this.className += " active";
+          });
+        }
+
+         </script>
+
+
+
+    </body>
+</html>
